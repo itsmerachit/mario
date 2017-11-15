@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html  lang="en_US">
+<meta charset="utf-8">
+	<head>
+		<title>My First Game</title>
+	</head>
+	<body>
+		<audio id="gameAudio" src="Audios/theme.mp3" onended= "playAudio()"></audio>
+		<canvas id="gameCanvas" width="1104" height="240" style="position: absolute;top: 0;left:0; background-image: url('Assets/bg.png');">
+			<script>
+				//canvas
+				var canvas=document.getElementById('gameCanvas');
+				var ctx=canvas.getContext('2d');
+
+				//player
+				var mario=new player("Assets/mario.png",150,160,50,50);
+
+				//sound item
+				var jumpSound=new Audio("Audios/jump.mp3");
+				var themeSound=document.getElementById('gameAudio');
+				themeSound.play();
+				function playAudio()
+				{
+					themeSound.play();
+				}
+				
+
+				//keys
+				const leftKey = 37;
+    			const upKey = 38;
+    			const rightKey = 39;
+    			const spaceKey=8;
+
+    			var left=false;
+    			var right=false;
+    			var up=false;
+    			var ground=false;
+
+				//game
+				startGame();
+				function startGame()
+				{
+
+					mario.X+=mario.velX;
+					mario.Y-=mario.velY;
+					//logic
+					if(left)
+						mario.velX=-5;
+					if(right)
+						mario.velX=5;
+					if(!left&&!right)
+						mario.velX=0;
+					if(up)
+					{
+						mario.velY=10;
+						jumpSound.play();
+						ground=false;
+					}
+					if(!up)
+					{	mario.velY=0;
+						if(mario.Y!=160)
+						{
+							mario.Y+=10;
+						}
+
+
+					}
+
+					ctx.clearRect(0,0,canvas.width,canvas.height);
+					ctx.drawImage(mario.pic,mario.X,mario.Y,mario.Width,mario.Height);
+					setTimeout(startGame,1000/33);
+				}
+
+				//object
+				function player(image,x,y,width,height)
+				{
+					this.pic=new Image();
+					this.pic.src=image;
+					this.X=x;
+					this.Y=y;
+					this.Height=height;
+					this.Width=width;
+					this.velX=0;
+					this.velY=0;
+					this.prevX;
+					this.prevY;
+				}
+				// Adding keydown and keyup event listleners.
+        		document.addEventListener('keydown', keyPressed);
+			    document.addEventListener('keyup', keyReleased);
+
+				
+				//keyevents
+				function keyPressed(evt)
+				{
+					if (evt.keyCode == leftKey)
+        			{
+            			left = true;
+					}
+					if (evt.keyCode == rightKey)
+					{
+					    right = true;
+					}
+					if (evt.keyCode == upKey)
+					{
+						up = true;
+					}
+    			}
+    			function keyReleased(evt)
+    			{
+					if (evt.keyCode == leftKey)
+        			{
+            			left = false;
+					}
+					if (evt.keyCode == rightKey)
+					{
+					    right = false;
+					}
+					if (evt.keyCode == upKey)
+					{
+						up = false;
+					}
+        			evt.preventDefault();
+    			}
+
+			</script>
+		</canvas>
+	</body>
+</html>
